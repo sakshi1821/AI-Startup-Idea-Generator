@@ -1,0 +1,33 @@
+{
+  "startup_names": [
+    "SmartSync",
+    "AINova",
+    "FutureMind",
+    "NextGen AI",
+    "VisionTech"
+  ],
+
+  "startup_ideas": [
+    "AI Assistant",
+    "AI Analytics Platform",
+    "AI Marketplace",
+    "AI Automation Tool",
+    "AI Recommendation System"
+  ],
+
+  "customers": [
+    "Students",
+    "Hospitals",
+    "Businesses",
+    "Teachers",
+    "Freelancers"
+  ],
+
+  "revenue_models": [
+    "Subscription",
+    "Pay-per-use",
+    "Freemium",
+    "Advertisement",
+    "Enterprise Licensing"
+  ]
+}

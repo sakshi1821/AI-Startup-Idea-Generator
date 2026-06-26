@@ -1,43 +1,17 @@
 import random
+import json
+
+# Load data from JSON file
+with open("data.json", "r") as file:
+    data = json.load(file)
+
 
 def generate_startup(industry):
-    startup_names = [
-        "SmartSync",
-        "AINova",
-        "FutureMind",
-        "NextGen AI",
-        "VisionTech"
-    ]
-
-    startup_ideas = [
-        "AI Assistant",
-        "AI Analytics Platform",
-        "AI Marketplace",
-        "AI Automation Tool",
-        "AI Recommendation System"
-    ]
-
-    customers = [
-        "Students",
-        "Hospitals",
-        "Businesses",
-        "Teachers",
-        "Freelancers"
-    ]
-
-    revenue_models = [
-        "Subscription",
-        "Pay-per-use",
-        "Freemium",
-        "Advertisement",
-        "Enterprise Licensing"
-    ]
-
     startup = {
-        "name": random.choice(startup_names),
-        "idea": random.choice(startup_ideas),
-        "customer": random.choice(customers),
-        "revenue": random.choice(revenue_models),
+        "name": random.choice(data["startup_names"]),
+        "idea": random.choice(data["startup_ideas"]),
+        "customer": random.choice(data["customers"]),
+        "revenue": random.choice(data["revenue_models"]),
         "score": random.randint(60, 100)
     }
 
