@@ -1,14 +1,18 @@
 industry = input("Enter an industry: ")
 
-ideas = [
-    "AI Assistant",
-    "AI Analytics Platform",
-    "AI Marketplace",
-    "AI Automation Tool",
-    "AI Recommendation System"
-]
+print("\nStartup Ideas:\n")
 
-print("\nStartup Ideas:")
+if industry.lower() == "healthcare":
+    print("- AI Doctor Assistant")
+    print("- AI Medical Report Analyzer")
+    print("- AI Patient Monitoring System")
 
-for idea in ideas:
-    print("-", idea, "for", industry)
+elif industry.lower() == "education":
+    print("- AI Homework Helper")
+    print("- AI Study Planner")
+    print("- AI Exam Preparation Coach")
+
+else:
+    print("- AI Assistant for", industry)
+    print("- AI Analytics Platform for", industry)
+    print("- AI Marketplace for", industry)
