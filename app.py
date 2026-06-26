@@ -33,18 +33,23 @@ def generate_startup(industry):
         "Enterprise Licensing"
     ]
 
-    name = random.choice(startup_names)
-    idea = random.choice(startup_ideas)
-    customer = random.choice(customers)
-    revenue = random.choice(revenue_models)
-    score = random.randint(60, 100)
+    startup = {
+        "name": random.choice(startup_names),
+        "idea": random.choice(startup_ideas),
+        "customer": random.choice(customers),
+        "revenue": random.choice(revenue_models),
+        "score": random.randint(60, 100)
+    }
 
-    print("\n🚀 Startup Name:", name)
-    print("💡 Startup Idea:", idea, "for", industry)
-    print("🎯 Target Customers:", customer)
-    print("💰 Revenue Model:", revenue)
-    print("📈 Startup Score:", score, "/100")
+    return startup
 
 
 industry = input("Enter an industry: ")
-generate_startup(industry)
+
+startup = generate_startup(industry)
+
+print("\n🚀 Startup Name:", startup["name"])
+print("💡 Startup Idea:", startup["idea"], "for", industry)
+print("🎯 Target Customers:", startup["customer"])
+print("💰 Revenue Model:", startup["revenue"])
+print("📈 Startup Score:", startup["score"], "/100")
