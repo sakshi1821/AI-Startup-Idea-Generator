@@ -1,18 +1,19 @@
+import random
+
 industry = input("Enter an industry: ")
 
-print("\nStartup Ideas:\n")
+ideas = [
+    "AI Assistant",
+    "AI Analytics Platform",
+    "AI Marketplace",
+    "AI Automation Tool",
+    "AI Recommendation System",
+    "AI Chatbot",
+    "AI Hiring Platform",
+    "AI Productivity Tool"
+]
 
-if industry.lower() == "healthcare":
-    print("- AI Doctor Assistant")
-    print("- AI Medical Report Analyzer")
-    print("- AI Patient Monitoring System")
+startup = random.choice(ideas)
 
-elif industry.lower() == "education":
-    print("- AI Homework Helper")
-    print("- AI Study Planner")
-    print("- AI Exam Preparation Coach")
-
-else:
-    print("- AI Assistant for", industry)
-    print("- AI Analytics Platform for", industry)
-    print("- AI Marketplace for", industry)
+print("\n🚀 Your AI Startup Idea:")
+print(startup, "for", industry)
