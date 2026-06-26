@@ -46,10 +46,15 @@ def generate_startup(industry):
 
 industry = input("Enter an industry: ")
 
-startup = generate_startup(industry)
+print("\n🚀 AI Startup Ideas\n")
 
-print("\n🚀 Startup Name:", startup["name"])
-print("💡 Startup Idea:", startup["idea"], "for", industry)
-print("🎯 Target Customers:", startup["customer"])
-print("💰 Revenue Model:", startup["revenue"])
-print("📈 Startup Score:", startup["score"], "/100")
+for i in range(5):
+    startup = generate_startup(industry)
+
+    print(f"Startup {i+1}")
+    print("Name:", startup["name"])
+    print("Idea:", startup["idea"], "for", industry)
+    print("Customers:", startup["customer"])
+    print("Revenue:", startup["revenue"])
+    print("Score:", startup["score"])
+    print("-" * 40)
