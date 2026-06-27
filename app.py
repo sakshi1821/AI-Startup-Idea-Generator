@@ -1,36 +1,189 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, send_file
 import random
 import json
+import io
+import os
+from datetime import datetime
 
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import (
+    SimpleDocTemplate,
+    Paragraph,
+    Spacer,
+    HRFlowable,
+    Image
+)
 app = Flask(__name__)
+app.secret_key = "startup_secret"
 
-# Load data from JSON
-with open("data.json", "r") as file:
+# Load startup data
+with open("data.json", encoding="utf-8") as file:
     data = json.load(file)
 
 
 def generate_startup(industry):
-    return {
-        "name": random.choice(data["startup_names"]),
-        "idea": random.choice(data["startup_ideas"]),
-        "customer": random.choice(data["customers"]),
-        "revenue": random.choice(data["revenue_models"]),
-        "score": random.randint(60, 100),
-        "industry": industry
-    }
+    startup = random.choice(data).copy()
+
+    startup["industry"] = industry
+    startup["category"] = startup["idea"]
+
+    return startup
 
 
 @app.route("/", methods=["GET", "POST"])
 def home():
 
     startup = None
+    error = None
 
     if request.method == "POST":
-        industry = request.form["industry"]
-        startup = generate_startup(industry)
 
-    return render_template("index.html", startup=startup)
+        industry = request.form["industry"].strip().title()
+        favorite = request.form.get("favorite")
 
+        if industry:
+
+            # Generate Startup
+            startup = generate_startup(industry)
+            session["last_startup"] = startup
+
+            # Search History
+            history = session.get("history", [])
+
+            if industry in history:
+                history.remove(industry)
+
+            history.insert(0, industry)
+            history = history[:5]
+
+            session["history"] = history
+
+            # Save Favorites
+            if favorite:
+
+                favorites = session.get("favorites", [])
+
+                if favorite not in favorites:
+                    favorites.append(favorite)
+
+                session["favorites"] = favorites
+
+        else:
+            error = "Please enter an industry."
+
+            # Dashboard Statistics
+
+        stats = {
+           "total": len(data),
+           "favorites": len(session.get("favorites", [])),
+           "searches": len(session.get("history", [])),
+           "average": round(
+            sum(item["score"] for item in data) / len(data)
+    )
+}
+    return render_template(
+    "index.html",
+    startup=startup,
+    error=error,
+    history=session.get("history", []),
+    favorites=session.get("favorites", []),
+    stats=stats
+)
+    @app.route("/download_pdf")
+    def download_pdf():
+
+     startup = session.get("last_startup")
+
+    if not startup:
+     return "No startup generated yet!"
+
+    buffer = io.BytesIO()
+
+    doc = SimpleDocTemplate(buffer)
+
+    styles = getSampleStyleSheet()
+
+    story = []
+
+    logo_path = os.path.join(app.root_path, "static", "images", "logo.png")
+    print(logo_path)
+    print(os.path.exists(logo_path))
+    logo = Image(logo_path)
+
+    logo.drawWidth = 70
+    logo.drawHeight = 70
+
+    story.append(logo)
+    story.append(Spacer(1, 10))
+
+    current_date = datetime.now().strftime("%d %B %Y")
+    current_time = datetime.now().strftime("%I:%M %p")
+
+# Title
+    story.append(Paragraph("<font size=22><b>AI Startup Report</b></font>", styles["Title"]))
+    story.append(Spacer(1, 12))
+
+# Date & Time
+    story.append(Paragraph(f"<b>Date:</b> {current_date}", styles["Normal"]))
+    story.append(Paragraph(f"<b>Time:</b> {current_time}", styles["Normal"]))
+    story.append(Spacer(1, 10))
+
+    story.append(HRFlowable(width="100%"))
+    story.append(Spacer(1, 12))
+
+# Startup Information
+    story.append(Paragraph("<font size=16><b>Startup Information</b></font>", styles["Heading2"]))
+    story.append(Spacer(1, 6))
+
+    story.append(Paragraph(f"<b>Name:</b> {startup['name']}", styles["Normal"]))
+    story.append(Paragraph(f"<b>Idea:</b> {startup['idea']}", styles["Normal"]))
+    story.append(Paragraph(f"<b>Industry:</b> {startup['industry']}", styles["Normal"]))
+
+    story.append(Spacer(1, 10))
+    story.append(HRFlowable(width="100%"))
+    story.append(Spacer(1, 10))
+
+# Business Information
+    story.append(Paragraph("<font size=16><b>Business Details</b></font>", styles["Heading2"]))
+    story.append(Spacer(1, 6))
+
+    story.append(Paragraph(f"<b>Customers:</b> {startup['customer']}", styles["Normal"]))
+    story.append(Paragraph(f"<b>Revenue:</b> {startup['revenue']}", styles["Normal"]))
+    story.append(Paragraph(f"<b>Location:</b> {startup['location']}", styles["Normal"]))
+    story.append(Paragraph(f"<b>Funding:</b> {startup['funding']}", styles["Normal"]))
+    story.append(Paragraph(f"<b>Founder:</b> {startup['founder']}", styles["Normal"]))
+    story.append(Paragraph(f"<b>Age:</b> {startup['age']}", styles["Normal"]))
+
+    story.append(Spacer(1, 10))
+    story.append(HRFlowable(width="100%"))
+    story.append(Spacer(1, 10))
+
+# Performance
+    story.append(Paragraph("<font size=16><b>Performance</b></font>", styles["Heading2"]))
+    story.append(Spacer(1, 6))
+
+    story.append(Paragraph(f"<b>Success Rate:</b> {startup['success']}%", styles["Normal"]))
+    story.append(Paragraph(f"<b>Score:</b> {startup['score']}/100", styles["Normal"]))
+    story.append(Spacer(1, 25))
+
+    story.append(HRFlowable(width="100%"))
+    story.append(Spacer(1, 10))
+
+    story.append(
+        Paragraph(
+           "<i>Generated by AI Startup Idea Generator</i>",
+        styles["Normal"]
+    )
+)
+
+    doc.build(story)
+    buffer.seek(0)
+    return send_file(
+    buffer,
+    as_attachment=True,
+    download_name="AI_Startup_Report.pdf",
+    mimetype="application/pdf"
+)
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,33 +1,175 @@
+[
+    {
+        "name": "FutureMind",
+        "idea": "AI Assistant",
+        "icon": "🤖",
+        "customer": "Students",
+        "revenue": "Subscription",
+        "location": "Bangalore",
+        "funding": "$500K",
+        "founder": "Alex Johnson",
+        "age": "1 Year",
+        "success": "82",
+        "score": 80
+    },
+    {
+        "name": "SmartSync",
+        "idea": "AI Marketplace",
+        "icon": "🏥",
+        "customer": "Hospitals",
+        "revenue": "Enterprise Licensing",
+        "location": "Mumbai",
+        "funding": "$2 Million",
+        "founder": "Sarah Williams",
+        "age": "2 Years",
+        "success": "91",
+        "score": 92
+    },
+    {
+        "name": "NextGen AI",
+        "idea": "AI Analytics Platform",
+        "icon": "💻",
+        "customer": "Businesses",
+        "revenue": "Freemium",
+        "location": "Hyderabad",
+        "funding": "$1 Million",
+        "founder": "David Lee",
+        "age": "8 Months",
+        "success": "85",
+        "score": 88
+    }
+,
 {
-  "startup_names": [
-    "SmartSync",
-    "AINova",
-    "FutureMind",
-    "NextGen AI",
-    "VisionTech"
-  ],
-
-  "startup_ideas": [
-    "AI Assistant",
-    "AI Analytics Platform",
-    "AI Marketplace",
-    "AI Automation Tool",
-    "AI Recommendation System"
-  ],
-
-  "customers": [
-    "Students",
-    "Hospitals",
-    "Businesses",
-    "Teachers",
-    "Freelancers"
-  ],
-
-  "revenue_models": [
-    "Subscription",
-    "Pay-per-use",
-    "Freemium",
-    "Advertisement",
-    "Enterprise Licensing"
-  ]
+    "name": "HealthBridge",
+    "idea": "AI Doctor",
+    "icon": "🩺",
+    "customer": "Hospitals",
+    "revenue": "Subscription",
+    "location": "Chennai",
+    "funding": "$3 Million",
+    "founder": "Emma Davis",
+    "age": "3 Years",
+    "success": "93",
+    "score": 95
+},
+{
+    "name": "EduPilot",
+    "idea": "AI Tutor",
+    "icon": "📚",
+    "customer": "Students",
+    "revenue": "Freemium",
+    "location": "Pune",
+    "funding": "$750K",
+    "founder": "Ryan Smith",
+    "age": "1 Year",
+    "success": "84",
+    "score": 86
+},
+{
+    "name": "AgriSense",
+    "idea": "Smart Farming",
+    "icon": "🌾",
+    "customer": "Farmers",
+    "revenue": "Subscription",
+    "location": "Delhi",
+    "funding": "$1.2 Million",
+    "founder": "Priya Sharma",
+    "age": "2 Years",
+    "success": "88",
+    "score": 90
+},
+{
+    "name": "TravelMate AI",
+    "idea": "AI Travel Planner",
+    "icon": "✈️",
+    "customer": "Travelers",
+    "revenue": "Commission",
+    "location": "Goa",
+    "funding": "$900K",
+    "founder": "Michael Brown",
+    "age": "1.5 Years",
+    "success": "81",
+    "score": 84
+},
+{
+    "name": "LegalEase",
+    "idea": "AI Lawyer",
+    "icon": "⚖️",
+    "customer": "Law Firms",
+    "revenue": "Enterprise Licensing",
+    "location": "Bangalore",
+    "funding": "$4 Million",
+    "founder": "Sophia Wilson",
+    "age": "4 Years",
+    "success": "95",
+    "score": 97
+},
+{
+    "name": "FitVision",
+    "idea": "AI Fitness Coach",
+    "icon": "💪",
+    "customer": "Fitness Centers",
+    "revenue": "Monthly Membership",
+    "location": "Hyderabad",
+    "funding": "$650K",
+    "founder": "Daniel Carter",
+    "age": "10 Months",
+    "success": "83",
+    "score": 85
+},
+{
+    "name": "FinEdge",
+    "idea": "AI Finance Advisor",
+    "icon": "💰",
+    "customer": "Banks",
+    "revenue": "SaaS",
+    "location": "Mumbai",
+    "funding": "$5 Million",
+    "founder": "Olivia Taylor",
+    "age": "5 Years",
+    "success": "94",
+    "score": 96
+},
+{
+    "name": "RetailBoost",
+    "idea": "AI Inventory Manager",
+    "icon": "🛒",
+    "customer": "Retail Stores",
+    "revenue": "Subscription",
+    "location": "Ahmedabad",
+    "funding": "$1.5 Million",
+    "founder": "James Anderson",
+    "age": "2 Years",
+    "success": "87",
+    "score": 89
+},
+{
+    "name": "SecureNet AI",
+    "idea": "AI Cyber Security",
+    "icon": "🛡️",
+    "customer": "Enterprises",
+    "revenue": "Enterprise Licensing",
+    "location": "Singapore",
+    "funding": "$6 Million",
+    "founder": "Ethan Harris",
+    "age": "4 Years",
+    "success": "96",
+    "score": 98
+},
+{
+    "name": "CreativeMind",
+    "idea": "AI Content Generator",
+    "icon": "✍️",
+    "customer": "Content Creators",
+    "revenue": "Freemium",
+    "location": "Bangalore",
+    "funding": "$850K",
+    "founder": "Ava Martinez",
+    "age": "1 Year",
+    "success": "86",
+    "score": 88
 }
+
+
+
+]

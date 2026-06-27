@@ -1,34 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>AI Startup Idea Generator</title>
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
+
 </head>
 
 <body>
 
+<button id="themeBtn" class="theme-btn">
+    ☀️ Light Mode
+</button>
+
 <div class="container">
 
+    <!-- Header -->
+
     <div class="header">
-        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+
+        <img src="{{ url_for('static', filename='images/logo.png') }}"
+             class="logo">
+
         <h1>AI Startup Idea Generator</h1>
+
     </div>
 
-    <form method="POST">
+    <!-- Form -->
+
+    <form method="POST" class="search-form">
 
         <input
             type="text"
             name="industry"
-            placeholder="Enter Industry"
+            placeholder="Enter Industry (Healthcare, Finance...)"
             required>
 
         <button type="submit">
-            Generate Startup
+            🚀 Generate Startup
         </button>
 
     </form>
+
+    <div id="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Generating AI Startup...</p>
+</div>
+
+    {% if error %}
+    <div class="stats">
+
+    <div class="stat-card">
+        <h3>🚀</h3>
+        <p>{{ stats.total }}</p>
+        <span>Total Ideas</span>
+    </div>
+
+    <div class="stat-card">
+        <h3>❤️</h3>
+        <p>{{ stats.favorites }}</p>
+        <span>Favorites</span>
+    </div>
+
+    <div class="stat-card">
+        <h3>🕒</h3>
+        <p>{{ stats.searches }}</p>
+        <span>Searches</span>
+    </div>
+
+    <div class="stat-card">
+        <h3>⭐</h3>
+        <p>{{ stats.average }}</p>
+        <span>Avg Score</span>
+    </div>
+
+</div>
+
+    <p class="error">
+        {{ error }}
+    </p>
+
+    {% endif %}
 
     {% if startup %}
 
@@ -36,15 +94,164 @@
 
         <h2>🚀 Startup Details</h2>
 
+        <div class="startup-badge">
+
+            <span class="startup-icon">
+                {{ startup.icon }}
+            </span>
+
+            <span class="badge">
+                {{ startup.idea }}
+            </span>
+
+        </div>
+
         <p><strong>Name:</strong> {{ startup.name }}</p>
 
-        <p><strong>Idea:</strong> {{ startup.idea }} for {{ startup.industry }}</p>
+        <p><strong>Idea:</strong>
+            {{ startup.idea }} for {{ startup.industry }}
+        </p>
 
-        <p><strong>Customers:</strong> {{ startup.customer }}</p>
+        <p><strong>Customers:</strong>
+            {{ startup.customer }}
+        </p>
 
-        <p><strong>Revenue:</strong> {{ startup.revenue }}</p>
+        <p><strong>Revenue:</strong>
+            {{ startup.revenue }}
+        </p>
 
-        <p><strong>Score:</strong> {{ startup.score }}/100</p>
+        <p><strong>Location:</strong>
+            {{ startup.location }}
+        </p>
+
+        <p><strong>Funding:</strong>
+            {{ startup.funding }}
+        </p>
+
+        <p><strong>Founder:</strong>
+            {{ startup.founder }}
+        </p>
+
+        <p><strong>Age:</strong>
+            {{ startup.age }}
+        </p>
+
+        <p><strong>Success Rate</strong></p>
+
+        <div class="progress">
+
+            <div class="progress-bar"
+                 data-success="{{ startup.success }}">
+
+                {{ startup.success }}%
+
+            </div>
+
+        </div>
+
+        <p>
+
+            <strong>Score:</strong>
+
+            {% if startup.score >= 80 %}
+
+                <span class="green">
+
+                    {{ startup.score }}/100 ⭐⭐⭐⭐⭐ Excellent
+
+                </span>
+
+            {% elif startup.score >= 60 %}
+
+                <span class="orange">
+
+                    {{ startup.score }}/100 ⭐⭐⭐⭐ Good
+
+                </span>
+
+            {% else %}
+
+                <span class="red">
+
+                    {{ startup.score }}/100 ⭐⭐⭐ Average
+
+                </span>
+
+            {% endif %}
+
+        </p>
+
+        <!-- Action Buttons -->
+
+        <div class="action-buttons">
+
+            <form method="POST">
+
+                <input
+                    type="hidden"
+                    name="industry"
+                    value="{{ startup.industry }}">
+
+                <input
+                    type="hidden"
+                    name="favorite"
+                    value="{{ startup.name }}">
+
+                <button type="submit">
+                    ❤️ Save to Favorites
+                </button>
+
+            </form>
+
+            <a href="/download_pdf">
+
+                <button type="button">
+                    📄 Download PDF
+                </button>
+
+            </a>
+
+            <form method="GET">
+
+                <button type="submit">
+                    🔄 Generate Again
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+    {% if history %}
+
+    <div class="result">
+
+        <h2>🕒 Recent Searches</h2>
+
+        {% for item in history %}
+
+            <p>🔹 {{ item }}</p>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+    {% if favorites %}
+
+    <div class="result">
+
+        <h2>❤️ Favorite Startups</h2>
+
+        {% for item in favorites %}
+
+            <p>⭐ {{ item }}</p>
+
+        {% endfor %}
 
     </div>
 
@@ -52,5 +259,12 @@
 
 </div>
 
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+<footer class="footer">
+    © 2026 AI Startup Idea Generator • Built with Flask & ❤️
+</footer>
+
 </body>
+
 </html>
