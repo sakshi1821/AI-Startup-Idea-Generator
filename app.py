@@ -13,15 +13,22 @@ from reportlab.platypus import (
     HRFlowable,
     Image
 )
+
 app = Flask(__name__)
 app.secret_key = "startup_secret"
 
-# Load startup data
-with open("data.json", encoding="utf-8") as file:
+# -----------------------------
+# Load Startup Data
+# -----------------------------
+with open("data.json", "r", encoding="utf-8") as file:
     data = json.load(file)
 
 
+# -----------------------------
+# Generate Startup
+# -----------------------------
 def generate_startup(industry):
+
     startup = random.choice(data).copy()
 
     startup["industry"] = industry
@@ -30,35 +37,50 @@ def generate_startup(industry):
     return startup
 
 
+# -----------------------------
+# Home Page
+# -----------------------------
 @app.route("/", methods=["GET", "POST"])
 def home():
 
     startup = None
     error = None
 
+    stats = {
+        "total": len(data),
+        "favorites": len(session.get("favorites", [])),
+        "searches": len(session.get("history", [])),
+        "average": round(
+            sum(item["score"] for item in data) / len(data)
+        )
+    }
+
     if request.method == "POST":
 
-        industry = request.form["industry"].strip().title()
+        industry = request.form.get("industry", "").strip().title()
         favorite = request.form.get("favorite")
-
         if industry:
 
             # Generate Startup
             startup = generate_startup(industry)
+
             session["last_startup"] = startup
 
+            # -----------------------------
             # Search History
+            # -----------------------------
             history = session.get("history", [])
 
             if industry in history:
                 history.remove(industry)
 
             history.insert(0, industry)
-            history = history[:5]
 
-            session["history"] = history
+            session["history"] = history[:5]
 
-            # Save Favorites
+            # -----------------------------
+            # Favorites
+            # -----------------------------
             if favorite:
 
                 favorites = session.get("favorites", [])
@@ -71,31 +93,29 @@ def home():
         else:
             error = "Please enter an industry."
 
-            # Dashboard Statistics
-
-        stats = {
-           "total": len(data),
-           "favorites": len(session.get("favorites", [])),
-           "searches": len(session.get("history", [])),
-           "average": round(
-            sum(item["score"] for item in data) / len(data)
-    )
-}
     return render_template(
-    "index.html",
-    startup=startup,
-    error=error,
-    history=session.get("history", []),
-    favorites=session.get("favorites", []),
-    stats=stats
-)
-    @app.route("/download_pdf")
-    def download_pdf():
+        "index.html",
+        startup=startup,
+        error=error,
+        history=session.get("history", []),
+        favorites=session.get("favorites", []),
+        stats=stats
+    )
 
-     startup = session.get("last_startup")
+
+# -----------------------------
+# Download PDF
+# -----------------------------
+# -----------------------------
+# Download PDF
+# -----------------------------
+@app.route("/download_pdf")
+def download_pdf():
+
+    startup = session.get("last_startup")
 
     if not startup:
-     return "No startup generated yet!"
+        return "No startup generated yet!"
 
     buffer = io.BytesIO()
 
@@ -105,85 +125,121 @@ def home():
 
     story = []
 
-    logo_path = os.path.join(app.root_path, "static", "images", "logo.png")
-    print(logo_path)
-    print(os.path.exists(logo_path))
-    logo = Image(logo_path)
+    # --------------------------------
+    # Logo
+    # --------------------------------
+    logo_path = os.path.join(
+        app.root_path,
+        "static",
+        "images",
+        "logo.png"
+    )
 
-    logo.drawWidth = 70
-    logo.drawHeight = 70
+    if os.path.exists(logo_path):
 
-    story.append(logo)
+        logo = Image(logo_path)
+        logo.drawWidth = 70
+        logo.drawHeight = 70
+
+        story.append(logo)
+
+    story.append(Spacer(1, 12))
+
+    # --------------------------------
+    # Title
+    # --------------------------------
+    story.append(
+        Paragraph(
+            "<font size='22'><b>AI Startup Report</b></font>",
+            styles["Title"]
+        )
+    )
+
     story.append(Spacer(1, 10))
 
     current_date = datetime.now().strftime("%d %B %Y")
     current_time = datetime.now().strftime("%I:%M %p")
 
-# Title
-    story.append(Paragraph("<font size=22><b>AI Startup Report</b></font>", styles["Title"]))
-    story.append(Spacer(1, 12))
+    story.append(
+        Paragraph(
+            f"<b>Date:</b> {current_date}",
+            styles["Normal"]
+        )
+    )
 
-# Date & Time
-    story.append(Paragraph(f"<b>Date:</b> {current_date}", styles["Normal"]))
-    story.append(Paragraph(f"<b>Time:</b> {current_time}", styles["Normal"]))
+    story.append(
+        Paragraph(
+            f"<b>Time:</b> {current_time}",
+            styles["Normal"]
+        )
+    )
+
     story.append(Spacer(1, 10))
 
     story.append(HRFlowable(width="100%"))
-    story.append(Spacer(1, 12))
 
-# Startup Information
-    story.append(Paragraph("<font size=16><b>Startup Information</b></font>", styles["Heading2"]))
-    story.append(Spacer(1, 6))
+    story.append(Spacer(1, 15))
 
-    story.append(Paragraph(f"<b>Name:</b> {startup['name']}", styles["Normal"]))
-    story.append(Paragraph(f"<b>Idea:</b> {startup['idea']}", styles["Normal"]))
-    story.append(Paragraph(f"<b>Industry:</b> {startup['industry']}", styles["Normal"]))
+    # --------------------------------
+    # Startup Information
+    # --------------------------------
+    story.append(
+        Paragraph(
+            "<font size='16'><b>Startup Information</b></font>",
+            styles["Heading2"]
+        )
+    )
 
     story.append(Spacer(1, 10))
+
+    fields = [
+        ("Name", startup["name"]),
+        ("Idea", startup["idea"]),
+        ("Industry", startup["industry"]),
+        ("Customers", startup["customer"]),
+        ("Revenue", startup["revenue"]),
+        ("Location", startup["location"]),
+        ("Funding", startup["funding"]),
+        ("Founder", startup["founder"]),
+        ("Age", startup["age"]),
+        ("Success Rate", f"{startup['success']}%"),
+        ("Score", f"{startup['score']}/100")
+    ]
+
+    for label, value in fields:
+
+        story.append(
+            Paragraph(
+                f"<b>{label}:</b> {value}",
+                styles["Normal"]
+            )
+        )
+
+        story.append(Spacer(1, 4))
+
+    story.append(Spacer(1, 15))
+
     story.append(HRFlowable(width="100%"))
-    story.append(Spacer(1, 10))
 
-# Business Information
-    story.append(Paragraph("<font size=16><b>Business Details</b></font>", styles["Heading2"]))
-    story.append(Spacer(1, 6))
-
-    story.append(Paragraph(f"<b>Customers:</b> {startup['customer']}", styles["Normal"]))
-    story.append(Paragraph(f"<b>Revenue:</b> {startup['revenue']}", styles["Normal"]))
-    story.append(Paragraph(f"<b>Location:</b> {startup['location']}", styles["Normal"]))
-    story.append(Paragraph(f"<b>Funding:</b> {startup['funding']}", styles["Normal"]))
-    story.append(Paragraph(f"<b>Founder:</b> {startup['founder']}", styles["Normal"]))
-    story.append(Paragraph(f"<b>Age:</b> {startup['age']}", styles["Normal"]))
-
-    story.append(Spacer(1, 10))
-    story.append(HRFlowable(width="100%"))
-    story.append(Spacer(1, 10))
-
-# Performance
-    story.append(Paragraph("<font size=16><b>Performance</b></font>", styles["Heading2"]))
-    story.append(Spacer(1, 6))
-
-    story.append(Paragraph(f"<b>Success Rate:</b> {startup['success']}%", styles["Normal"]))
-    story.append(Paragraph(f"<b>Score:</b> {startup['score']}/100", styles["Normal"]))
-    story.append(Spacer(1, 25))
-
-    story.append(HRFlowable(width="100%"))
     story.append(Spacer(1, 10))
 
     story.append(
         Paragraph(
-           "<i>Generated by AI Startup Idea Generator</i>",
-        styles["Normal"]
+            "<i>Generated by AI Startup Idea Generator</i>",
+            styles["Italic"]
+        )
     )
-)
-
     doc.build(story)
+
     buffer.seek(0)
+
+    print("PDF Built Successfully")
+
     return send_file(
     buffer,
     as_attachment=True,
     download_name="AI_Startup_Report.pdf",
     mimetype="application/pdf"
 )
-
 if __name__ == "__main__":
     app.run(debug=True)

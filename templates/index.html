@@ -52,8 +52,7 @@
     <div class="spinner"></div>
     <p>Generating AI Startup...</p>
 </div>
-
-    {% if error %}
+    
     <div class="stats">
 
     <div class="stat-card">
@@ -82,11 +81,13 @@
 
 </div>
 
-    <p class="error">
-        {{ error }}
-    </p>
+{% if error %}
 
-    {% endif %}
+<p class="error">
+    {{ error }}
+</p>
+
+{% endif %}
 
     {% if startup %}
 
